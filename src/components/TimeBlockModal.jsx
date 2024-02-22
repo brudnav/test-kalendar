@@ -3,11 +3,13 @@ import { saveTimeBlock } from "../util/timeBlock";
 import styles from "../css/TimeBlockModal.module.css";
 import moment from "moment";
 import { isChild } from "../util/contract";
+import toast from 'react-hot-toast';
 
 function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContractId }) {
     const [blockStart, setBlockStart] = useState(moment().format('YYYY-MM-DD'));
     const [blockEnd, setBlockEnd] = useState(moment().add(1, 'days').format('YYYY-MM-DD'));
     const [blockState, setBlockState] = useState("new");
+    const [btnIsDisabled, setBtnIsDisabled] = useState(false);
 
     const blockStartHandler = (e) => {
         setBlockStart(e.target.value);
@@ -20,7 +22,17 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
         setBlockState(e.target.value);
     };
 
+    const handleClick = () => {
+        setBtnIsDisabled(true);
+
+        setTimeout(() => {
+            setBtnIsDisabled(false);
+        }, 3000);
+    }
+
+
     const createTimeBlock = () => {
+        const notify = () => toast.success("Úspěšně jsi vytvořil blok");
         let timeBlock = {
             id: selectedContractId,
             start: blockStart,
@@ -34,7 +46,8 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
             return [...prev, timeBlock];
         });
         setSelectedContractId("");
-
+        handleClick();
+        notify();
     };
 
     return (
@@ -64,7 +77,7 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
                 <option value="in-progress">V Přípravě</option>
                 <option value="completed">Hotová</option>
             </select>
-            <button className="button is-light" onClick={createTimeBlock}>Vytvořit blok</button>
+            <button disabled={btnIsDisabled} className="button is-light" onClick={createTimeBlock}>Vytvořit blok</button>
         </div>
     )
 }

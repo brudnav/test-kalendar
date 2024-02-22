@@ -3,6 +3,7 @@ import { editBlock, findBlock } from "../util/timeBlock";
 import styles from "../css/TimeBlockModal.module.css";
 import moment from "moment";
 import { isChild } from "../util/contract";
+import toast from 'react-hot-toast';
 
 function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
 
@@ -15,6 +16,7 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
     const [blockStart, setBlockStart] = useState('');
     const [blockEnd, setBlockEnd] = useState('');
     const [blockState, setBlockState] = useState('');
+    const [btnIsDisabled, setBtnIsDisabled] = useState(false);
 
     useEffect(() => {
         if (timeBlock.length != 0) {
@@ -23,6 +25,14 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
             setBlockState(timeBlock[0].state);
         }
     }, [timeBlock]);
+
+    const handleClick = () => {
+        setBtnIsDisabled(true);
+
+        setTimeout(() => {
+            setBtnIsDisabled(false);
+        }, 3000);
+    }
 
 
     const blockStartHandler = (e) => {
@@ -39,6 +49,9 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
 
 
     const editHandler = () => {
+
+        const notify = () => toast.success("Úspěšně jsi upravil blok");
+
         let timeBlock = {
             start: blockStart,
             end: blockEnd,
@@ -47,7 +60,7 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
         };
         timeBlock = editBlock(selectedContractId, timeBlock);
         setTimeBlocks(timeBlock);
-
+        notify();
     };
 
     return (
@@ -77,7 +90,7 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
                 <option value="in-progress">V Přípravě</option>
                 <option value="completed">Hotová</option>
             </select>
-            <button className="button is-light" onClick={editHandler}>Editovat blok</button>
+            <button disabled={btnIsDisabled} className="button is-light" onClick={editHandler}>Editovat blok</button>
         </div>
     )
 }

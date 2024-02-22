@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { getContracts } from "./util/contract";
-
+import { Toaster } from 'react-hot-toast';
 import ContractList from './components/ContractList'
 import { getTimeBlocks } from './util/timeBlock';
 import OriginalCalendar from './components/OriginalCalendar';
@@ -15,9 +15,7 @@ function App() {
 
   return (
     <div className={style.container}>
-      <span className="icon">
-        <i className="fas fa-home"></i>
-      </span>
+      <Toaster />
       <OriginalCalendar timeBlocks={timeBlocks} setSelectedContractId={setSelectedContractId} selectedContractId={selectedContractId} setTimeBlocks={setTimeBlocks} />
       <ContractList setContracts={setContracts} contracts={contracts} setSelectedContractId={setSelectedContractId} selectedContractId={selectedContractId} setTimeBlocks={setTimeBlocks} />
     </div>

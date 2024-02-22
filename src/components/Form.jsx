@@ -5,11 +5,13 @@ import {
   pushExtraContract,
   getContracts,
 } from "../util/contract";
+import toast from "react-hot-toast"
 
 function Form({ setContracts }) {
   const [contractName, setContractName] = useState("");
   const [contractCode, setContractCode] = useState("");
   const [higherContractCode, setHigherContractCode] = useState("");
+  const [btnIsDisabled, setBtnIsDisabled] = useState(false);
 
   const contractNameHandler = (e) => {
     setContractName(e.target.value);
@@ -21,7 +23,19 @@ function Form({ setContracts }) {
     setHigherContractCode(e.target.value);
   };
 
+  const handleClick = () => {
+    setBtnIsDisabled(true);
+
+    setTimeout(() => {
+      setBtnIsDisabled(false);
+    }, 3000);
+  }
+
   const createContract = () => {
+
+    const notify = () => toast.success("Úspěšně jsi vytvořil zakázku");
+
+
     let contract = {
       name: contractName,
       code: contractCode,
@@ -46,37 +60,42 @@ function Form({ setContracts }) {
     setContractName("");
     setContractCode("");
     setHigherContractCode("");
+
+    handleClick();
+    notify();
   };
 
   return (
-    <div className={styles.container}>
-      <label htmlFor="contractName">Název</label>
-      <input
-        className="input"
-        id="contractName"
-        type="text"
-        value={contractName}
-        onChange={contractNameHandler}
-      />
-      <label htmlFor="contractCode">Kód Zakázky</label>
-      <input
-        className="input"
-        id="contractCode"
-        type="text"
-        value={contractCode}
-        onChange={contractCodeHandler}
-      />
+    <>
+      <div className={styles.container}>
+        <label htmlFor="contractName">Název</label>
+        <input
+          className="input"
+          id="contractName"
+          type="text"
+          value={contractName}
+          onChange={contractNameHandler}
+        />
+        <label htmlFor="contractCode">Kód Zakázky</label>
+        <input
+          className="input"
+          id="contractCode"
+          type="text"
+          value={contractCode}
+          onChange={contractCodeHandler}
+        />
 
-      <label htmlFor="higherContractCode">Kód Nadřazené Zakázky</label>
-      <input
-        className="input"
-        id="higherContractCode"
-        type="text"
-        value={higherContractCode}
-        onChange={higherContractCodeHandler}
-      />
-      <button className="button is-light" onClick={createContract}>Vytvořit zakázku</button>
-    </div>
+        <label htmlFor="higherContractCode">Kód Nadřazené Zakázky</label>
+        <input
+          className="input"
+          id="higherContractCode"
+          type="text"
+          value={higherContractCode}
+          onChange={higherContractCodeHandler}
+        />
+        <button disabled={btnIsDisabled} className="button is-light" onClick={createContract}>Vytvořit zakázku</button>
+      </div>
+    </>
   );
 }
 
