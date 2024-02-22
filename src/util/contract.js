@@ -88,3 +88,24 @@ export function isChild(id, contracts = getContracts()) {
     // Pokud kontrakt s daným ID nebyl nalezen ani na hlavní ani na vnořené úrovni
     return undefined;
 }
+
+export function findById(code, contracts = getContracts(),) {
+
+    // Procházení každého objektu v poli
+    for (const contract of contracts) {
+        // Pokud se kód shoduje, vrátit tento objekt
+        if (contract.code === code) {
+            return contract;
+        }
+        // Pokud má objekt pole 'extra', rekurzivně prohledat toto pole
+        if (contract.extra.length > 0) {
+            const found = findById(code, contract.extra);
+            if (found) {
+                return found;
+            }
+        }
+    }
+    // Pokud není nalezen žádný objekt s daným kódem, vrátit null
+    return null;
+}
+

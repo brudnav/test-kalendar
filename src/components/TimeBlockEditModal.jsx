@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { editBlock, findBlock } from "../util/timeBlock";
 import styles from "../css/TimeBlockModal.module.css";
 import moment from "moment";
-import { isChild } from "../util/contract";
+import { findById, isChild } from "../util/contract";
 import toast from 'react-hot-toast';
 
 function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
@@ -60,11 +60,13 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
         };
         timeBlock = editBlock(selectedContractId, timeBlock);
         setTimeBlocks(timeBlock);
+        handleClick();
         notify();
     };
 
     return (
         <div className={styles.container}>
+            <h3>Aktuálně upravuješ: {findById(selectedContractId).name}</h3>
             <label htmlFor="blockStart">Start</label>
             <input
                 id="blockStart"
