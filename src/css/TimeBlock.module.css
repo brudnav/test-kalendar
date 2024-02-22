@@ -1,0 +1,43 @@
+.new {
+  font-weight: bold;
+}
+.in-progress {
+  font-weight: bold;
+}
+.completed {
+  font-weight: bold;
+}
+
+.box-new {
+  width: 10px;
+  height: 10px;
+  background-color: crimson;
+}
+
+.box-progress {
+  width: 10px;
+  height: 10px;
+  background-color: orangered;
+}
+
+.box-completed {
+  width: 10px;
+  height: 10px;
+  background-color: lime;
+}
+
+.days {
+  display: flex;
+  gap: 2px;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.close-icon {
+  font-size: 40px;
+  cursor: pointer;
+}

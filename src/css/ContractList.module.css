@@ -1,0 +1,26 @@
+.item {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item li {
+  cursor: pointer;
+}
+
+.close-icon {
+  font-size: 30px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.item:hover .close-icon {
+  opacity: 1;
+}
+
+.create-btn {
+  margin: auto;
+  min-width: 30%;
+}
