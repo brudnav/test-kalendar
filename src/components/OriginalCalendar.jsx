@@ -4,7 +4,7 @@ import { useState } from "react";
 import style from "../css/OriginalCalendar.module.css"
 import Modal from "./Modal";
 import TimeBlockEditModal from "./TimeBlockEditModal";
-import { isChild } from "../util/contract";
+import { getContracts, getContractsAll, isChild } from "../util/contract";
 
 function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBlocks, timeBlocks }) {
 
@@ -34,6 +34,11 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
     }
 
     function generateHierarchy(blocks) {
+
+        if (!blocks) {
+            return null;
+        }
+
         const childrenMap = new Map();
         const output = [];
         const visited = new Set();
@@ -85,7 +90,7 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
 
     return (
         <>
-            <div className="box">
+            <div className={`box ${style.box}`}>
                 <nav>
                     <button className="button is-light is-small" onClick={() => setCurrentWeekStart(prev => prev.clone().subtract(1, 'week'))}>←</button>
                     <span>{weekStart} - {weekEnd}</span>
@@ -104,14 +109,36 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
                         }
                     </div>
                     {
+
+                        getContractsAll().map((contract) => {
+                            const hierarchyIds = generateHierarchy(timeBlocks) || [];
+                            console.log(hierarchyIds.includes(contract.code));
+                            if (!hierarchyIds.includes(contract.code)) {
+
+                                return (
+                                    <div key={contract.code} className={style.row} >
+                                        {daysOfWeek.map((day, index) => {
+                                            const key = `${contract.code}-${index}`;
+
+                                            return <div key={key} className={`${style["empty-box"]}`}>{contract.code}</div>;
+
+
+                                        })
+                                        }
+                                    </div>
+                                )
+                            }
+                            return null;
+                        })
+                    }
+                    {
                         generateHierarchy(timeBlocks).map((block) => {
                             console.log(generateHierarchy(timeBlocks), block);
-                            console.log(isChild(block));
                             return (
                                 <div key={block} className={style.row} >
                                     {
                                         daysOfWeek.map((day, index) => {
-
+                                            // console.log(day, index);
                                             const key = `${block}-${index}`;
 
                                             if (findEvent(day, block).length === 0) {
@@ -123,6 +150,45 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
                                     }
                                 </div>
                             )
+                        })
+                    }
+                    <br />
+
+
+                    {
+                        //kod od chat
+                        getContractsAll().map((contract) => {
+                            return (
+                                <div key={contract.code} className={style.row} >
+                                    {daysOfWeek.map((day, index) => {
+                                        const key = `${contract.code}-${index}`;
+                                        const events = findEvent(day, contract.code);
+                                        const isHierarchy = generateHierarchy(timeBlocks).includes(contract.code);
+
+                                        // Pokud pro tento contract a den není žádná událost, zobrazí se prázdná buňka
+
+
+                                        // Pokud pro tento contract a den je událost, zobrazí se barevná buňka
+                                        if (events.length > 0) {
+                                            const state = events[0].state; // Předpokládáme, že events je pole objektů s property state
+                                            return (
+                                                <div
+                                                    key={key}
+                                                    onClick={() => { setIsOpen(true); setSelectedContractId(contract.code) }}
+                                                    className={`${style[pickStyle(state)]} ${isChild(contract.code) ? style["child-box"] : ''}`}
+                                                >
+                                                    {contract.code}
+                                                </div>
+                                            );
+                                        }
+                                        else {
+
+                                            return <div key={key} className={`${style["empty-box"]}`}>{contract.code}</div>;
+
+                                        }
+                                    })}
+                                </div>
+                            );
                         })
                     }
                 </div>

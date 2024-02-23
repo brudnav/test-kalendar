@@ -37,6 +37,24 @@ export function getContracts() {
     return contracts;
 }
 
+export function getContractsAll() {
+    let contracts = localStorage.getItem("contracts") ? JSON.parse(localStorage.getItem("contracts")) : [];
+
+    function findAllContracts(contracts, allContracts = []) {
+        contracts.forEach(contract => {
+            allContracts.push(contract); // Přidáme aktuální contract do výsledného pole
+            if (contract.extra && contract.extra.length > 0) {
+                // Pokud má contract další vnořené contracts, prohledáme i ty
+                findAllContracts(contract.extra, allContracts);
+            }
+        });
+        return allContracts;
+    }
+
+    return findAllContracts(contracts);
+}
+
+
 export function hasContractParent(contract) {
     for (const key in contract) {
         if (key == "higherCode" && contract[key] != null) {

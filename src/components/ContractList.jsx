@@ -20,7 +20,7 @@ function ContractList({ contracts, setSelectedContractId, setTimeBlocks, selecte
 
 
     return (
-        <>
+        <div className={`box ${style.container}`}>
             <button className={`block button is-dark ${style["create-btn"]}`} onClick={() => { setIsOpenForm(true) }}>Vytvořit zakázku</button>
             <ul className="block">
                 {
@@ -53,7 +53,7 @@ function ContractList({ contracts, setSelectedContractId, setTimeBlocks, selecte
             <Modal open={isOpenForm} onClose={() => setIsOpenForm(false)}>
                 <Form setContracts={setContracts}></Form>
             </Modal>
-        </>
+        </div>
     )
 }
 

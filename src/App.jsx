@@ -16,8 +16,8 @@ function App() {
   return (
     <div className={style.container}>
       <Toaster />
-      <OriginalCalendar timeBlocks={timeBlocks} setSelectedContractId={setSelectedContractId} selectedContractId={selectedContractId} setTimeBlocks={setTimeBlocks} />
       <ContractList setContracts={setContracts} contracts={contracts} setSelectedContractId={setSelectedContractId} selectedContractId={selectedContractId} setTimeBlocks={setTimeBlocks} />
+      <OriginalCalendar timeBlocks={timeBlocks} setSelectedContractId={setSelectedContractId} selectedContractId={selectedContractId} setTimeBlocks={setTimeBlocks} />
     </div>
   )
 }
