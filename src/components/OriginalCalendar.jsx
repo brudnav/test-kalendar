@@ -4,6 +4,7 @@ import { useState } from "react";
 import style from "../css/OriginalCalendar.module.css"
 import Modal from "./Modal";
 import TimeBlockEditModal from "./TimeBlockEditModal";
+import { isChild } from "../util/contract";
 
 function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBlocks, timeBlocks }) {
 
@@ -103,23 +104,29 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
                         }
                     </div>
                     {
-                        generateHierarchy(timeBlocks).map((block) => (
-                            <div key={block} className={style.row}>
-                                {daysOfWeek.map((day, index) => {
+                        generateHierarchy(timeBlocks).map((block) => {
+                            console.log(generateHierarchy(timeBlocks), block);
+                            console.log(isChild(block));
+                            return (
+                                <div key={block} className={style.row} >
+                                    {
+                                        daysOfWeek.map((day, index) => {
 
-                                    const key = `${block}-${index}`;
+                                            const key = `${block}-${index}`;
 
-                                    if (findEvent(day, block).length === 0) {
-                                        return <div key={key} className={style["empty-box"]}></div>;
+                                            if (findEvent(day, block).length === 0) {
+                                                return <div key={key} className={`${style["empty-box"]} ${isChild(block) ? style["child-empty-box"] : ''}`}></div>;
+                                            }
+                                            const state = timeBlocks.filter((item) => item.id == block)[0].state;
+                                            return <div key={key} onClick={() => { setIsOpen(true); setSelectedContractId(block) }} className={`${style[pickStyle(state)]} ${isChild(block) ? style["child-box"] : ''}`}>{block}</div>;
+                                        })
                                     }
-                                    const state = timeBlocks.filter((item) => item.id == block)[0].state;
-                                    return <div key={key} onClick={() => { setIsOpen(true); setSelectedContractId(block) }} className={style[pickStyle(state)]}>{block}</div>;
-                                })}
-                            </div>
-                        ))
+                                </div>
+                            )
+                        })
                     }
                 </div>
-            </div>
+            </div >
             <Modal open={isOpen} onClose={() => setIsOpen(false)}>
                 <TimeBlockEditModal selectedContractId={selectedContractId} setTimeBlocks={setTimeBlocks} />
             </Modal>
