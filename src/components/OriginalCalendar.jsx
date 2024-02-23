@@ -109,64 +109,12 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
                         }
                     </div>
                     {
-
-                        getContractsAll().map((contract) => {
-                            const hierarchyIds = generateHierarchy(timeBlocks) || [];
-                            console.log(hierarchyIds.includes(contract.code));
-                            if (!hierarchyIds.includes(contract.code)) {
-
-                                return (
-                                    <div key={contract.code} className={style.row} >
-                                        {daysOfWeek.map((day, index) => {
-                                            const key = `${contract.code}-${index}`;
-
-                                            return <div key={key} className={`${style["empty-box"]}`}>{contract.code}</div>;
-
-
-                                        })
-                                        }
-                                    </div>
-                                )
-                            }
-                            return null;
-                        })
-                    }
-                    {
-                        generateHierarchy(timeBlocks).map((block) => {
-                            console.log(generateHierarchy(timeBlocks), block);
-                            return (
-                                <div key={block} className={style.row} >
-                                    {
-                                        daysOfWeek.map((day, index) => {
-                                            // console.log(day, index);
-                                            const key = `${block}-${index}`;
-
-                                            if (findEvent(day, block).length === 0) {
-                                                return <div key={key} className={`${style["empty-box"]} ${isChild(block) ? style["child-empty-box"] : ''}`}></div>;
-                                            }
-                                            const state = timeBlocks.filter((item) => item.id == block)[0].state;
-                                            return <div key={key} onClick={() => { setIsOpen(true); setSelectedContractId(block) }} className={`${style[pickStyle(state)]} ${isChild(block) ? style["child-box"] : ''}`}>{block}</div>;
-                                        })
-                                    }
-                                </div>
-                            )
-                        })
-                    }
-                    <br />
-
-
-                    {
-                        //kod od chat
                         getContractsAll().map((contract) => {
                             return (
-                                <div key={contract.code} className={style.row} >
+                                <div key={contract.code} className={`${style.row} ${isChild(contract.code) ? style["child-row"] : ''}`} >
                                     {daysOfWeek.map((day, index) => {
                                         const key = `${contract.code}-${index}`;
                                         const events = findEvent(day, contract.code);
-                                        const isHierarchy = generateHierarchy(timeBlocks).includes(contract.code);
-
-                                        // Pokud pro tento contract a den není žádná událost, zobrazí se prázdná buňka
-
 
                                         // Pokud pro tento contract a den je událost, zobrazí se barevná buňka
                                         if (events.length > 0) {
@@ -175,7 +123,7 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
                                                 <div
                                                     key={key}
                                                     onClick={() => { setIsOpen(true); setSelectedContractId(contract.code) }}
-                                                    className={`${style[pickStyle(state)]} ${isChild(contract.code) ? style["child-box"] : ''}`}
+                                                    className={`${style[pickStyle(state)]}`}
                                                 >
                                                     {contract.code}
                                                 </div>

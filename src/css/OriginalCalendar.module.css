@@ -33,6 +33,10 @@
   justify-content: space-around;
 }
 
+.child-row {
+  margin-left: 20px;
+}
+
 .empty-box {
   width: 100%;
   height: 30px;
