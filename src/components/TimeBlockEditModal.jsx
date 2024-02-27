@@ -18,6 +18,8 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
     const [blockState, setBlockState] = useState('');
     const [btnIsDisabled, setBtnIsDisabled] = useState(false);
 
+    const [isEndDisabled, setIsEndDisabled] = useState(false);
+
     useEffect(() => {
         if (timeBlock.length != 0) {
             setBlockStart(timeBlock[0].start);
@@ -36,8 +38,23 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
 
 
     const blockStartHandler = (e) => {
+
         setBlockStart(e.target.value);
-        setBlockEnd(moment(e.target.value).add(1, 'days').format('YYYY-MM-DD'));
+        const contract = findById(selectedContractId);
+        const startMoment = moment(e.target.value, "YYYY-MM-DD");
+        const endMoment = moment(findBlock(contract.higherCode)[0].end, "YYYY-MM-DD");
+
+
+        if (!startMoment.isSame(endMoment, 'day')) {
+            setBlockEnd(moment(e.target.value).add(1, 'days').format('YYYY-MM-DD'));
+            setIsEndDisabled(false);
+        }
+        else {
+            setBlockEnd(e.target.value)
+            setIsEndDisabled(true);
+        }
+
+
     };
     const blockEndHandler = (e) => {
         setBlockEnd(e.target.value);
@@ -49,6 +66,14 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
 
 
     const editHandler = () => {
+
+        const startMoment = moment(blockStart, "YYYY-MM-DD");
+        const endMoment = moment(blockEnd, "YYYY-MM-DD");
+
+        if (startMoment.isAfter(endMoment)) {
+            alert("Nesmí být datum konce dřív než samotný start");
+            return
+        }
 
         const notify = () => toast.success("Úspěšně jsi upravil blok");
 
@@ -64,6 +89,35 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
         notify();
     };
 
+    const validationMinTime = () => {
+
+        const contract = findById(selectedContractId);
+        if (contract.higherCode) {
+
+            return findBlock(contract.higherCode)[0].start
+        }
+
+        return "";
+    }
+
+    const validationMaxTime = () => {
+
+
+        const contract = findById(selectedContractId);
+
+        // const startMoment = moment(blockStart, "YYYY-MM-DD");
+        // const endMoment = moment(findBlock(contract.higherCode)[0].end, "YYYY-MM-DD");
+
+
+
+        if (contract.higherCode) {
+            return findBlock(contract.higherCode)[0].end
+        }
+
+        return "";
+    }
+
+
     return (
         <div className={styles.container}>
             <h3>Aktuálně upravuješ: {findById(selectedContractId).name}</h3>
@@ -73,7 +127,8 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
                 className="input"
                 type="date"
                 value={blockStart}
-                min={moment().format('YYYY-MM-DD')}
+                min={validationMinTime()}
+                max={validationMaxTime()}
                 onChange={blockStartHandler}
             />
             <label htmlFor="blockEnd">Konec</label>
@@ -82,8 +137,10 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
                 id="blockEnd"
                 type="date"
                 value={blockEnd}
-                min={moment().format('YYYY-MM-DD')}
+                min={validationMinTime()}
+                max={validationMaxTime()}
                 onChange={blockEndHandler}
+                disabled={isEndDisabled}
             />
 
             <label htmlFor="blockState">Stav</label>

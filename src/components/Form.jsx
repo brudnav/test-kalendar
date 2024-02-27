@@ -4,6 +4,7 @@ import {
   saveContract,
   pushExtraContract,
   getContracts,
+  findById,
 } from "../util/contract";
 import toast from "react-hot-toast"
 
@@ -34,6 +35,31 @@ function Form({ setContracts }) {
   const createContract = () => {
 
     const notify = () => toast.success("Úspěšně jsi vytvořil zakázku");
+
+    if (contractName == "") {
+      alert("Nezadal jsi \"Název\"")
+      return;
+    }
+
+    if (contractCode == "") {
+      alert("Nezadal jsi \"Kód Zakázky\"")
+      return;
+    }
+
+    if (findById(contractCode)) {
+      alert("Tento kód zakázky již používáš");
+      return;
+    }
+
+    if (!findById(higherContractCode) && higherContractCode != "") {
+      alert("Kód nadřazené zakázky neexistuje")
+      return;
+    }
+
+    if (findById(higherContractCode)?.higherCode != null && higherContractCode != "") {
+      alert("Kód nadřazené zakázky obsahuje kód podzakázky")
+      return;
+    }
 
 
     let contract = {

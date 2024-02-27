@@ -1,19 +1,34 @@
 import { useState } from "react";
-import { saveTimeBlock } from "../util/timeBlock";
+import { findBlock, saveTimeBlock } from "../util/timeBlock";
 import styles from "../css/TimeBlockModal.module.css";
 import moment from "moment";
-import { isChild } from "../util/contract";
+import { findById, isChild } from "../util/contract";
 import toast from 'react-hot-toast';
 
 function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContractId }) {
     const [blockStart, setBlockStart] = useState(moment().format('YYYY-MM-DD'));
     const [blockEnd, setBlockEnd] = useState(moment().add(1, 'days').format('YYYY-MM-DD'));
     const [blockState, setBlockState] = useState("new");
+
     const [btnIsDisabled, setBtnIsDisabled] = useState(false);
+    const [isEndDisabled, setIsEndDisabled] = useState(false);
 
     const blockStartHandler = (e) => {
+
         setBlockStart(e.target.value);
-        setBlockEnd(moment(e.target.value).add(1, 'days').format('YYYY-MM-DD'));
+        const contract = findById(selectedContractId);
+        const startMoment = moment(e.target.value, "YYYY-MM-DD");
+        const endMoment = moment(findBlock(contract.higherCode)[0].end, "YYYY-MM-DD");
+
+
+        if (!startMoment.isSame(endMoment, 'day')) {
+            setBlockEnd(moment(e.target.value).add(1, 'days').format('YYYY-MM-DD'));
+            setIsEndDisabled(false);
+        }
+        else {
+            setBlockEnd(e.target.value)
+            setIsEndDisabled(true);
+        }
     };
     const blockEndHandler = (e) => {
         setBlockEnd(e.target.value);
@@ -32,6 +47,16 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
 
 
     const createTimeBlock = () => {
+
+        const startMoment = moment(blockStart, "YYYY-MM-DD");
+        const endMoment = moment(blockEnd, "YYYY-MM-DD");
+
+        if (startMoment.isAfter(endMoment)) {
+            alert("Nesmí být datum konce dřív než samotný start");
+            return
+        }
+
+
         const notify = () => toast.success("Úspěšně jsi vytvořil blok");
         let timeBlock = {
             id: selectedContractId,
@@ -50,6 +75,34 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
         notify();
     };
 
+    const validationMinTime = () => {
+
+        const contract = findById(selectedContractId);
+        if (contract.higherCode) {
+
+            return findBlock(contract.higherCode)[0].start
+        }
+
+        return "";
+    }
+
+    const validationMaxTime = () => {
+
+
+        const contract = findById(selectedContractId);
+
+        // const startMoment = moment(blockStart, "YYYY-MM-DD");
+        // const endMoment = moment(findBlock(contract.higherCode)[0].end, "YYYY-MM-DD");
+
+
+
+        if (contract.higherCode) {
+            return findBlock(contract.higherCode)[0].end
+        }
+
+        return "";
+    }
+
     return (
         <div className={styles.container}>
             <label htmlFor="blockStart">Start</label>
@@ -58,7 +111,8 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
                 id="blockStart"
                 type="date"
                 value={blockStart}
-                min={moment().format('YYYY-MM-DD')}
+                min={validationMinTime()}
+                max={validationMaxTime()}
                 onChange={blockStartHandler}
             />
             <label htmlFor="blockEnd">Konec</label>
@@ -67,8 +121,10 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
                 id="blockEnd"
                 type="date"
                 value={blockEnd}
-                min={moment().add(1, 'days').format('YYYY-MM-DD')}
+                min={validationMinTime()}
+                max={validationMaxTime()}
                 onChange={blockEndHandler}
+                disabled={isEndDisabled}
             />
 
             <label htmlFor="blockState">Stav</label>
