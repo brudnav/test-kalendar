@@ -4,12 +4,15 @@ import { useState } from "react";
 import style from "../css/OriginalCalendar.module.css"
 import Modal from "./Modal";
 import TimeBlockEditModal from "./TimeBlockEditModal";
-import { getContracts, getContractsAll, isChild } from "../util/contract";
+import { findById, getContracts, getContractsAll, isChild } from "../util/contract";
+import TimeBlockModal from "./TimeBlockModal";
+import { findBlock } from "../util/timeBlock";
 
 function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBlocks, timeBlocks }) {
 
     const [currentWeekStart, setCurrentWeekStart] = useState(moment().startOf('week'));
     const [isOpen, setIsOpen] = useState(false);
+    const [isOpen2, setIsOpen2] = useState(false);
 
     // Vypočet začátku a konce týdne pro zobrazení
     const weekStart = currentWeekStart.format('DD.MM.');
@@ -87,6 +90,21 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
         }
     };
 
+    const clickCreateHandler = (id) => {
+
+        if (findBlock(id).length > 0) {
+            return;
+        }
+
+        const contract = findById(id);
+
+        if (contract.higherCode && findBlock(contract.higherCode).length == 0) {
+            alert("Nejdříve vytvoř časový úsek pro hlavní zakázku");
+            return;
+        }
+
+        setIsOpen2(true);
+    }
 
     return (
         <>
@@ -122,7 +140,7 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
                                             return (
                                                 <div
                                                     key={key}
-                                                    onClick={() => { setIsOpen(true); setSelectedContractId(contract.code) }}
+                                                    onClick={() => { setSelectedContractId(contract.code); setIsOpen(true); }}
                                                     className={`${style[pickStyle(state)]}`}
                                                 >
                                                     {contract.code}
@@ -131,7 +149,7 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
                                         }
                                         else {
 
-                                            return <div key={key} className={`${style["empty-box"]}`}>{contract.code}</div>;
+                                            return <div onClick={() => { clickCreateHandler(contract.code); setSelectedContractId(contract.code) }} key={key} className={`${style["empty-box"]}`}>{contract.code}</div>;
 
                                         }
                                     })}
@@ -143,6 +161,9 @@ function OriginalCalendar({ setSelectedContractId, selectedContractId, setTimeBl
             </div >
             <Modal open={isOpen} onClose={() => setIsOpen(false)}>
                 <TimeBlockEditModal selectedContractId={selectedContractId} setTimeBlocks={setTimeBlocks} />
+            </Modal>
+            <Modal open={isOpen2} onClose={() => setIsOpen2(false)}>
+                <TimeBlockModal setSelectedContractId={setSelectedContractId} setTimeBlocks={setTimeBlocks} selectedContractId={selectedContractId} />
             </Modal>
         </>
     );

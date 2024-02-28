@@ -15,10 +15,6 @@
   align-items: center;
 }
 
-.item li {
-  cursor: pointer;
-}
-
 .close-icon {
   font-size: 30px;
   cursor: pointer;

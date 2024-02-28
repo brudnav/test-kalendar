@@ -9,7 +9,6 @@ import style from "../css/ContractList.module.css"
 function ContractList({ contracts, setSelectedContractId, setTimeBlocks, selectedContractId, setContracts }) {
 
     const [isOpenForm, setIsOpenForm] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
 
     const deleteHandler = (id) => {
 
@@ -30,7 +29,7 @@ function ContractList({ contracts, setSelectedContractId, setTimeBlocks, selecte
                         return (
                             <div key={contract.code} className={`content box ${style.item} `}>
                                 <div className={style.row}>
-                                    <li onClick={() => { setIsOpen(true); setSelectedContractId(contract.code) }} key={contract.code}>
+                                    <li key={contract.code}>
                                         {contract.name} ({contract.code})
                                     </li>
                                     <div className={style["close-icon"]} onClick={() => { deleteHandler(contract.code) }}>🦀</div>
@@ -40,7 +39,7 @@ function ContractList({ contracts, setSelectedContractId, setTimeBlocks, selecte
                                         <ul>
                                             {contract.extra.map((item) => (
                                                 <div key={item.code} className={style.row}>
-                                                    <li onClick={() => { setIsOpen(true); setSelectedContractId(item.code) }}>{item.name} ({item.code})</li>
+                                                    <li>{item.name} ({item.code})</li>
                                                     <div className={style["close-icon"]} onClick={() => { deleteHandler(item.code) }}>🦀</div>
                                                 </div>
                                             ))}
@@ -52,9 +51,6 @@ function ContractList({ contracts, setSelectedContractId, setTimeBlocks, selecte
                     })
                 }
             </ul>
-            <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                <TimeBlockModal setSelectedContractId={setSelectedContractId} setTimeBlocks={setTimeBlocks} selectedContractId={selectedContractId} />
-            </Modal>
             <Modal open={isOpenForm} onClose={() => setIsOpenForm(false)}>
                 <Form setContracts={setContracts}></Form>
             </Modal>

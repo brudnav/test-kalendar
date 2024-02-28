@@ -78,7 +78,8 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
     const validationMinTime = () => {
 
         const contract = findById(selectedContractId);
-        if (contract.higherCode) {
+
+        if (contract?.higherCode) {
 
             return findBlock(contract.higherCode)[0].start
         }
@@ -96,7 +97,7 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
 
 
 
-        if (contract.higherCode) {
+        if (contract?.higherCode) {
             return findBlock(contract.higherCode)[0].end
         }
 
