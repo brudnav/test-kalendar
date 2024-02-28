@@ -12,8 +12,10 @@ function ContractList({ contracts, setSelectedContractId, setTimeBlocks, selecte
     const [isOpen, setIsOpen] = useState(false);
 
     const deleteHandler = (id) => {
+
         let blocks = deleteBlock(id);
         let contracts = deleteContract(id);
+
         setTimeBlocks(blocks)
         setContracts(contracts);
     }
@@ -27,21 +29,24 @@ function ContractList({ contracts, setSelectedContractId, setTimeBlocks, selecte
                     contracts.map((contract) => {
                         return (
                             <div key={contract.code} className={`content box ${style.item} `}>
-                                <div>
+                                <div className={style.row}>
                                     <li onClick={() => { setIsOpen(true); setSelectedContractId(contract.code) }} key={contract.code}>
                                         {contract.name} ({contract.code})
                                     </li>
-                                    {
-                                        contract.extra.length > 0 && (
-                                            <ul>
-                                                {contract.extra.map((item) => (
-                                                    <li onClick={() => { setIsOpen(true); setSelectedContractId(item.code) }} key={item.code}>{item.name} ({item.code})</li>
-                                                ))}
-                                            </ul>
-                                        )
-                                    }
+                                    <div className={style["close-icon"]} onClick={() => { deleteHandler(contract.code) }}>🦀</div>
                                 </div>
-                                <div className={style["close-icon"]} onClick={() => { deleteHandler(contract.code) }}>🦀</div>
+                                {
+                                    contract.extra.length > 0 && (
+                                        <ul>
+                                            {contract.extra.map((item) => (
+                                                <div key={item.code} className={style.row}>
+                                                    <li onClick={() => { setIsOpen(true); setSelectedContractId(item.code) }}>{item.name} ({item.code})</li>
+                                                    <div className={style["close-icon"]} onClick={() => { deleteHandler(item.code) }}>🦀</div>
+                                                </div>
+                                            ))}
+                                        </ul>
+                                    )
+                                }
                             </div>
                         );
                     })

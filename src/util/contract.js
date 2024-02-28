@@ -80,10 +80,20 @@ export function pushExtraContract(contract) {
 export function deleteContract(id) {
     let contracts = getContracts();
 
-    contracts = contracts.filter((contract) => contract.code != id)
+    // Rekurzivní funkce pro mazání smlouvy i jejích vnořených smluv
+    function deleteContractRecursive(contracts, id) {
+        return contracts.filter((contract) => {
+            // Pokud contract obsahuje 'extra', filtrujeme i tyto vnořené smlouvy
+            if (contract.extra && contract.extra.length > 0) {
+                contract.extra = deleteContractRecursive(contract.extra, id);
+            }
+            return contract.code !== id;
+        });
+    }
+
+    contracts = deleteContractRecursive(contracts, id);
 
     saveContracts(contracts);
-
     return contracts;
 }
 
