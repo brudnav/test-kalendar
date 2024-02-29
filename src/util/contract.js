@@ -37,6 +37,24 @@ export function getContracts() {
     return contracts;
 }
 
+export function getContractsAll() {
+    let contracts = localStorage.getItem("contracts") ? JSON.parse(localStorage.getItem("contracts")) : [];
+
+    function findAllContracts(contracts, allContracts = []) {
+        contracts.forEach(contract => {
+            allContracts.push(contract); // Přidáme aktuální contract do výsledného pole
+            if (contract.extra && contract.extra.length > 0) {
+                // Pokud má contract další vnořené contracts, prohledáme i ty
+                findAllContracts(contract.extra, allContracts);
+            }
+        });
+        return allContracts;
+    }
+
+    return findAllContracts(contracts);
+}
+
+
 export function hasContractParent(contract) {
     for (const key in contract) {
         if (key == "higherCode" && contract[key] != null) {
@@ -62,10 +80,20 @@ export function pushExtraContract(contract) {
 export function deleteContract(id) {
     let contracts = getContracts();
 
-    contracts = contracts.filter((contract) => contract.code != id)
+    // Rekurzivní funkce pro mazání smlouvy i jejích vnořených smluv
+    function deleteContractRecursive(contracts, id) {
+        return contracts.filter((contract) => {
+            // Pokud contract obsahuje 'extra', filtrujeme i tyto vnořené smlouvy
+            if (contract.extra && contract.extra.length > 0) {
+                contract.extra = deleteContractRecursive(contract.extra, id);
+            }
+            return contract.code !== id;
+        });
+    }
+
+    contracts = deleteContractRecursive(contracts, id);
 
     saveContracts(contracts);
-
     return contracts;
 }
 

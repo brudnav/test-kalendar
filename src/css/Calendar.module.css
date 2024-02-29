@@ -1,3 +1,7 @@
+.box {
+  flex: 2;
+}
+
 .calendar {
   width: 100%;
   min-height: 300px;
@@ -27,6 +31,10 @@
   display: flex;
   margin-bottom: 5px;
   justify-content: space-around;
+}
+
+.child-row {
+  margin-left: 20px;
 }
 
 .empty-box {

@@ -3,7 +3,7 @@ import { getContracts } from "./util/contract";
 import { Toaster } from 'react-hot-toast';
 import ContractList from './components/ContractList'
 import { getTimeBlocks } from './util/timeBlock';
-import OriginalCalendar from './components/OriginalCalendar';
+import Calendar from './components/Calendar';
 import style from "./css/App.module.css";
 import "bulma/css/bulma.min.css"
 
@@ -16,8 +16,8 @@ function App() {
   return (
     <div className={style.container}>
       <Toaster />
-      <OriginalCalendar timeBlocks={timeBlocks} setSelectedContractId={setSelectedContractId} selectedContractId={selectedContractId} setTimeBlocks={setTimeBlocks} />
-      <ContractList setContracts={setContracts} contracts={contracts} setSelectedContractId={setSelectedContractId} selectedContractId={selectedContractId} setTimeBlocks={setTimeBlocks} />
+      <ContractList setContracts={setContracts} contracts={contracts} setTimeBlocks={setTimeBlocks} />
+      <Calendar timeBlocks={timeBlocks} setSelectedContractId={setSelectedContractId} selectedContractId={selectedContractId} setTimeBlocks={setTimeBlocks} />
     </div>
   )
 }

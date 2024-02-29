@@ -40,7 +40,7 @@ export function getTimeBlocks() {
 export function deleteBlock(id) {
     let timeBlocks = getTimeBlocks();
 
-    timeBlocks = timeBlocks.filter((block) => block.id != id)
+    timeBlocks = timeBlocks.filter((block) => block.id != id && block?.parent != id)
 
     saveTimeBlocks(timeBlocks);
 
