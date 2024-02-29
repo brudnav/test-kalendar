@@ -5,7 +5,7 @@ import moment from "moment";
 import { findById, isChild } from "../util/contract";
 import toast from 'react-hot-toast';
 
-function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContractId }) {
+function TimeBlockCreateModal({ setTimeBlocks, selectedContractId, setSelectedContractId }) {
     const [blockStart, setBlockStart] = useState(moment().format('YYYY-MM-DD'));
     const [blockEnd, setBlockEnd] = useState(moment().add(1, 'days').format('YYYY-MM-DD'));
     const [blockState, setBlockState] = useState("new");
@@ -89,13 +89,7 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
 
     const validationMaxTime = () => {
 
-
         const contract = findById(selectedContractId);
-
-        // const startMoment = moment(blockStart, "YYYY-MM-DD");
-        // const endMoment = moment(findBlock(contract.higherCode)[0].end, "YYYY-MM-DD");
-
-
 
         if (contract?.higherCode) {
             return findBlock(contract.higherCode)[0].end
@@ -139,4 +133,4 @@ function TimeBlockModal({ setTimeBlocks, selectedContractId, setSelectedContract
     )
 }
 
-export default TimeBlockModal
+export default TimeBlockCreateModal

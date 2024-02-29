@@ -1,21 +1,18 @@
 import { useState } from "react";
 import Modal from "./Modal";
-import TimeBlockModal from "./TimeBlockModal";
 import Form from "./Form";
 import { deleteBlock } from "../util/timeBlock";
 import { deleteContract } from "../util/contract";
 import style from "../css/ContractList.module.css"
 
-function ContractList({ contracts, setSelectedContractId, setTimeBlocks, selectedContractId, setContracts }) {
+function ContractList({ contracts, setTimeBlocks, setContracts }) {
 
     const [isOpenForm, setIsOpenForm] = useState(false);
 
     const deleteHandler = (id) => {
 
         let blocks = deleteBlock(id);
-        console.log(blocks);
         let contracts = deleteContract(id);
-        console.log(contracts);
 
         setTimeBlocks(blocks)
         setContracts(contracts);

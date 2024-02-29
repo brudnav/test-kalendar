@@ -101,14 +101,7 @@ function TimeBlockEditModal({ setTimeBlocks, selectedContractId }) {
     }
 
     const validationMaxTime = () => {
-
-
         const contract = findById(selectedContractId);
-
-        // const startMoment = moment(blockStart, "YYYY-MM-DD");
-        // const endMoment = moment(findBlock(contract.higherCode)[0].end, "YYYY-MM-DD");
-
-
 
         if (contract.higherCode) {
             return findBlock(contract.higherCode)[0].end
