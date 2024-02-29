@@ -13,7 +13,9 @@ function ContractList({ contracts, setSelectedContractId, setTimeBlocks, selecte
     const deleteHandler = (id) => {
 
         let blocks = deleteBlock(id);
+        console.log(blocks);
         let contracts = deleteContract(id);
+        console.log(contracts);
 
         setTimeBlocks(blocks)
         setContracts(contracts);
