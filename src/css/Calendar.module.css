@@ -1,5 +1,6 @@
 .box {
   flex: 2;
+  margin-bottom: 0 !important;
 }
 
 .calendar {
@@ -51,7 +52,7 @@
 .box-new {
   width: 100%;
   height: 30px;
-  background-color: crimson;
+  background-color: #36a2eb;
   cursor: pointer;
   border: 1px solid #2f2f2f;
   text-align: center;
@@ -60,7 +61,7 @@
 .box-progress {
   width: 100%;
   height: 30px;
-  background-color: orangered;
+  background-color: #ff9020;
   cursor: pointer;
   border: 1px solid #2f2f2f;
   text-align: center;
@@ -69,7 +70,7 @@
 .box-completed {
   width: 100%;
   height: 30px;
-  background-color: lime;
+  background-color: #ff6384;
   cursor: pointer;
   border: 1px solid #2f2f2f;
   text-align: center;
